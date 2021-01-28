@@ -1,14 +1,19 @@
 import math
 from copy import copy
-from typing import Sequence
 
 from . import const
+from .types import *
 from .vec3_operators import Vec3Operators
 
 
 class Vec3(Vec3Operators):
 
-    def __init__(self, x=None, y=None, z=None):
+    def __init__(
+            self,
+            x: Union[Vector3, Number] = None,
+            y: Optional[Number] = None,
+            z: Optional[Number] = None,
+    ):
         if x is None:
             self._v = [0., 0., 0.]
         else:
@@ -50,7 +55,12 @@ class Vec3(Vec3Operators):
     def z(self, x):
         self._v[2] = x
 
-    def set(self, x=None, y=None, z=None):
+    def set(
+            self,
+            x: Union[Vector3, Number] = None,
+            y: Optional[Number] = None,
+            z: Optional[Number] = None,
+    ):
         if x is None:
             self._v = [0., 0., 0.]
         else:
@@ -72,21 +82,21 @@ class Vec3(Vec3Operators):
     def __len__(self):
         return 3
 
-    def __getitem__(self, i):
+    def __getitem__(self, i: int):
         return self._v[i]
 
-    def __setitem__(self, i):
+    def __setitem__(self, i: int):
         return self._v[i]
 
     def __iter__(self):
         return iter(self._v)
 
-    def __contains__(self, item):
+    def __contains__(self, item: Number):
         return item in self._v
 
     # --- boolean equality ---
 
-    def __eq__(self, other):
+    def __eq__(self, other: Vector3):
         if isinstance(other, self.__class__):
             return self._v == other._v
         try:
@@ -101,7 +111,7 @@ class Vec3(Vec3Operators):
 
     # --- unary ---
 
-    def __round__(self, n=None):
+    def __round__(self, n: Optional[int] = None):
         if n is None:
             return self.__class__(
                 round(self._v[0]),
@@ -143,7 +153,7 @@ class Vec3(Vec3Operators):
         """
         return self._v[0] * self._v[0] + self._v[1] * self._v[1] + self._v[2] * self._v[2]
 
-    def distance(self, vec3: Sequence):
+    def distance(self, vec3: Vector3):
         """
         Returns the cartesian distance between self and other vector
 
@@ -159,7 +169,7 @@ class Vec3(Vec3Operators):
         dz = self._v[2] - vec3[2]
         return math.sqrt(dx * dx + dy * dy + dz * dz)
 
-    def distance_squared(self, vec3: Sequence):
+    def distance_squared(self, vec3: Vector3):
         """
         Returns the square of the cartesian distance between self and other vector
 
@@ -176,7 +186,7 @@ class Vec3(Vec3Operators):
         dz = self._v[2] - vec3[2]
         return dx * dx + dy * dy + dz * dz
 
-    def dot(self, vec3: Sequence):
+    def dot(self, vec3: Vector3):
         """
         Returns the dot product of self and other vec3
 
@@ -190,7 +200,7 @@ class Vec3(Vec3Operators):
 
     # ------ inplace methods -------
 
-    def round(self, n=None):
+    def round(self, n: Optional[int] = None):
         """
         Rounds the vector INPLACE
 
@@ -209,7 +219,7 @@ class Vec3(Vec3Operators):
             self._v[1] = round(self._v[1], n)
             self._v[2] = round(self._v[2], n)
 
-    def cross(self, vec3: Sequence):
+    def cross(self, vec3: Vector3):
         """
         Makes this vector the cross-product of this and arg3, INPLACE
         The cross product is always perpendicular to the plane described by the two vectors
@@ -231,7 +241,7 @@ class Vec3(Vec3Operators):
         ]
         return self
 
-    def reflect(self, vec3: Sequence):
+    def reflect(self, vec3: Vector3):
         """
         Reflects this vector on a plane with given normal, INPLACE
 
@@ -245,7 +255,7 @@ class Vec3(Vec3Operators):
         self.set(self - Vec3(vec3) * self.dot(vec3) * 2.)
         return self
 
-    def rotate_x(self, degree: float):
+    def rotate_x(self, degree: Number):
         """
         Rotates this vector around the x-axis, INPLACE
 
@@ -263,7 +273,7 @@ class Vec3(Vec3Operators):
         self.y = y
         return self
 
-    def rotate_y(self, degree):
+    def rotate_y(self, degree: Number):
         """
         Rotates this vector around the y-axis, INPLACE
         
@@ -281,7 +291,7 @@ class Vec3(Vec3Operators):
         self.x = x
         return self
 
-    def rotate_z(self, degree):
+    def rotate_z(self, degree: Number):
         """
         Rotates this vector around the z-axis, INPLACE
         
@@ -299,7 +309,7 @@ class Vec3(Vec3Operators):
         self.x = x
         return self
 
-    def rotate_axis(self, axis: Sequence, degree: float):
+    def rotate_axis(self, axis: Vector3, degree: Number):
         """
         Rotates this vector around an arbitrary axis, INPLACE
         
@@ -332,13 +342,24 @@ class Vec3(Vec3Operators):
 
     # --- value-copying methods ---
 
-    def crossed(self, vec3: Sequence):
+    def rounded(self, n: Optional[int] = None):
+        """
+        Returns rounded vector
+
+        :param n: optional, number of digits
+        :return: Vec3
+
+        >>> Vec3(1.2, 1.5, 1.7).rounded()
+        Vec3(1, 2, 2)
+        """
+
+    def crossed(self, vec3: Vector3):
         """
         Returns the cross-product of this vector and arg3
         The cross product is always perpendicular to the plane described by the two vectors
         
         :param vec3: float sequence of length 3
-        :return: self
+        :return: Vec3
         
         >>> Vec3(1,0,0).crossed((0,1,0))
         Vec3(0, 0, 1)
@@ -349,7 +370,7 @@ class Vec3(Vec3Operators):
         """
         return self.copy().cross(vec3)
 
-    def reflected(self, norm: Sequence):
+    def reflected(self, norm: Vector3):
         """
         Returns the this vector reflected on a plane with given normal
 
@@ -374,7 +395,7 @@ class Vec3(Vec3Operators):
         """
         return self.copy().rotate_x(degree)
 
-    def rotated_y(self, degree: float):
+    def rotated_y(self, degree: Number):
         """
         Returns this vector rotated around the y-axis
 
@@ -386,7 +407,7 @@ class Vec3(Vec3Operators):
         """
         return self.copy().rotate_y(degree)
 
-    def rotated_z(self, degree: float):
+    def rotated_z(self, degree: Number):
         """
         Returns this vector rotated around the z-axis
 
@@ -398,7 +419,7 @@ class Vec3(Vec3Operators):
         """
         return self.copy().rotate_z(degree)
 
-    def rotated_axis(self, axis: Sequence, degree: float):
+    def rotated_axis(self, axis: Sequence, degree: Number):
         """
         Returns this vector rotated around an arbitrary axis
 
