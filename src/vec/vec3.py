@@ -219,6 +219,42 @@ class Vec3(Vec3Operators):
             self._v[1] = round(self._v[1], n)
             self._v[2] = round(self._v[2], n)
 
+    def normalize(self):
+        """
+        Normalizes the vector, e.g. makes it length 1, INPLACE
+
+        :return: self
+
+        >>> Vec3(1,1,0).normalize()
+        Vec3(0.707107, 0.707107, 0)
+        >>> Vec3(1,2,3).normalize().length() == 1
+        True
+        """
+        l = self.length()
+        self._v[0] /= l
+        self._v[1] /= l
+        self._v[2] /= l
+        return self
+
+    def normalize_safe(self):
+        """
+        Normalizes the vector, e.g. makes it length 1, INPLACE
+        If the length is zero, this call does nothing
+
+        :return: self
+
+        >>> Vec3(1,1,0).normalize_safe()
+        Vec3(0.707107, 0.707107, 0)
+        >>> Vec3(0).normalize_safe()
+        Vec3(0, 0, 0)
+        """
+        l = self.length()
+        if not l == 0.:
+            self._v[0] /= l
+            self._v[1] /= l
+            self._v[2] /= l
+        return self
+
     def cross(self, vec3: Vector3):
         """
         Makes this vector the cross-product of this and arg3, INPLACE

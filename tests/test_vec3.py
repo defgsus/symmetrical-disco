@@ -33,3 +33,8 @@ class TestVec2(TestCase):
         self.assertEqual((-1, -1, -1), 1 - Vec3(2))
         self.assertEqual((1, 2, 3), (1, 2, 3) + Vec3())
         self.assertEqual((0, 1, 2), (1, 2, 3) - Vec3(1))
+
+    def test_0100_binary_op_inplace(self):
+        v = Vec3()
+        v += 1
+        self.assertEqual((1, 1, 1), v)

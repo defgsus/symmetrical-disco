@@ -58,7 +58,7 @@ class Vec3Operators:
             )
 
     def __iadd__(self, arg):
-        if isinstance(other, (int, float)):
+        if isinstance(arg, (int, float)):
             self._v[0] = self._v[0] + arg
             self._v[1] = self._v[1] + arg
             self._v[2] = self._v[2] + arg
@@ -70,7 +70,7 @@ class Vec3Operators:
             self._v[0] = self._v[0] + arg[0]
             self._v[1] = self._v[1] + arg[1]
             self._v[2] = self._v[2] + arg[2]
-
+        return self
     def __sub__(self, arg):
         if isinstance(arg, (int, float)):
             return self.__class__(
@@ -112,7 +112,7 @@ class Vec3Operators:
             )
 
     def __isub__(self, arg):
-        if isinstance(other, (int, float)):
+        if isinstance(arg, (int, float)):
             self._v[0] = self._v[0] - arg
             self._v[1] = self._v[1] - arg
             self._v[2] = self._v[2] - arg
@@ -124,7 +124,7 @@ class Vec3Operators:
             self._v[0] = self._v[0] - arg[0]
             self._v[1] = self._v[1] - arg[1]
             self._v[2] = self._v[2] - arg[2]
-
+        return self
     def __mul__(self, arg):
         if isinstance(arg, (int, float)):
             return self.__class__(
@@ -166,7 +166,7 @@ class Vec3Operators:
             )
 
     def __imul__(self, arg):
-        if isinstance(other, (int, float)):
+        if isinstance(arg, (int, float)):
             self._v[0] = self._v[0] * arg
             self._v[1] = self._v[1] * arg
             self._v[2] = self._v[2] * arg
@@ -178,7 +178,7 @@ class Vec3Operators:
             self._v[0] = self._v[0] * arg[0]
             self._v[1] = self._v[1] * arg[1]
             self._v[2] = self._v[2] * arg[2]
-
+        return self
     def __truediv__(self, arg):
         if isinstance(arg, (int, float)):
             return self.__class__(
@@ -220,7 +220,7 @@ class Vec3Operators:
             )
 
     def __itruediv__(self, arg):
-        if isinstance(other, (int, float)):
+        if isinstance(arg, (int, float)):
             self._v[0] = self._v[0] / arg
             self._v[1] = self._v[1] / arg
             self._v[2] = self._v[2] / arg
@@ -232,7 +232,7 @@ class Vec3Operators:
             self._v[0] = self._v[0] / arg[0]
             self._v[1] = self._v[1] / arg[1]
             self._v[2] = self._v[2] / arg[2]
-
+        return self
     def __mod__(self, arg):
         if isinstance(arg, (int, float)):
             return self.__class__(
@@ -274,7 +274,7 @@ class Vec3Operators:
             )
 
     def __imod__(self, arg):
-        if isinstance(other, (int, float)):
+        if isinstance(arg, (int, float)):
             self._v[0] = self._v[0] % arg
             self._v[1] = self._v[1] % arg
             self._v[2] = self._v[2] % arg
@@ -286,4 +286,4 @@ class Vec3Operators:
             self._v[0] = self._v[0] % arg[0]
             self._v[1] = self._v[1] % arg[1]
             self._v[2] = self._v[2] % arg[2]
-
+        return self

@@ -79,7 +79,7 @@ def render_binary_func(name: str, func_str: str, num: int, reverse: bool = False
 def render_binary_inplace_func(name: str, func_str: str, num: int):
     code = f"{INDENT}def {name}(self, arg):\n"
 
-    code += f"{INDENT*2}if isinstance(other, (int, float)):\n"
+    code += f"{INDENT*2}if isinstance(arg, (int, float)):\n"
     for i in range(num):
         args = (f"self._v[{i}]", f"arg")
         op = func_str.format(*args)
@@ -97,6 +97,7 @@ def render_binary_inplace_func(name: str, func_str: str, num: int):
         op = func_str.format(*args)
         code += f"{INDENT*3}self._v[{i}] = {op}\n"
 
+    code += f"{INDENT*2}return self"
     return code
 
 
