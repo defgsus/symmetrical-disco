@@ -16,15 +16,19 @@ class TreeNode:
     @property
     def node_name(self):
         return self._node_name
+
     @property
     def nodes(self):
         return self._nodes
+
     @property
     def node_parent(self):
         return self._node_parent
+
     @property
     def node_root(self):
         return self if not self._node_parent else self._node_parent.node_root
+
     @property
     def can_have_nodes(self):
         return self._can_have_nodes

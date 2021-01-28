@@ -3,6 +3,9 @@ from ..vec.types import *
 from ..vec import Vec3
 
 
+INFINITY = 1.e20
+
+
 class Base(TreeNode):
 
     __instance_counter = 0
