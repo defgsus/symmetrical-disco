@@ -1,5 +1,4 @@
 from .base import Base, INFINITY
-from .surface import Surface
 from ..vec import Vec3
 from ..vec.types import *
 
@@ -24,10 +23,12 @@ class Union(Container):
             d = min(d, node.distance(pos))
         return d
 
-    def distance_object(self, pos: Vec3):
+    def distance_object(self, pos: Vec3, ignore_objects=None):
         dist, obj = INFINITY, None
         for node in self.nodes:
-            d, o = node.distance_object(pos)
+            if ignore_objects and node in ignore_objects:
+                continue
+            d, o = node.distance_object(pos, ignore_objects=ignore_objects)
             if d < dist:
                 dist, obj = d, o
         return dist, obj
@@ -43,15 +44,22 @@ class Difference(Container):
             d = max(d, -node.distance(pos))
         return d
 
-    def distance_object(self, pos: Vec3):
+    def distance_object(self, pos: Vec3, ignore_objects=None):
+        dist, obj = INFINITY, None
         if not self.nodes:
-            return INFINITY, None
-        dist, obj = self.nodes[0].distance_object(pos)
-        for node in self.nodes[1:]:
-            d, o = node.distance_object(pos)
-            d = -d
-            if d > dist:
-                dist, obj = d, o
+            return dist, obj
+
+        for node in self.nodes:
+            if ignore_objects and self in ignore_objects:
+                continue
+
+            if obj is None:
+                dist, obj = node.distance_object(pos, ignore_objects=ignore_objects)
+            else:
+                d, o = node.distance_object(pos, ignore_objects=ignore_objects)
+                d = -d
+                if d > dist:
+                    dist, obj = d, o
         return dist, obj
 
 
@@ -65,12 +73,19 @@ class Intersection(Container):
             d = max(d, node.distance(pos))
         return d
 
-    def distance_object(self, pos: Vec3):
+    def distance_object(self, pos: Vec3, ignore_objects=None):
+        dist, obj = INFINITY, None
         if not self.nodes:
-            return INFINITY, None
-        dist, obj = self.nodes[0].distance_object(pos)
-        for node in self.nodes[1:]:
-            d, o = node.distance_object(pos)
-            if d > dist:
-                dist, obj = d, o
+            return dist, obj
+
+        for node in self.nodes:
+            if ignore_objects and self in ignore_objects:
+                continue
+
+            if obj is None:
+                dist, obj = node.distance_object(pos, ignore_objects=ignore_objects)
+            else:
+                d, o = node.distance_object(pos, ignore_objects=ignore_objects)
+                if d > dist:
+                    dist, obj = d, o
         return dist, obj

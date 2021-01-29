@@ -1,4 +1,4 @@
-from .treenode import TreeNode
+from .param_space import ParameterizedSpaceNode
 from ..vec.types import *
 from ..vec import Vec3
 
@@ -6,55 +6,34 @@ from ..vec import Vec3
 INFINITY = 1.e20
 
 
-class Base(TreeNode):
-
-    __instance_counter = 0
-
-    def __init__(self, **parameters):
-        self.__instance_counter += 1
-        super().__init__(f"{self.__class__.__name__}-{self.__instance_counter}")
-
-        self.__parameters = parameters
-        for key, value in self.__parameters.items():
-            setattr(self, key, value)
-
-    @property
-    def parameters(self):
-        return {
-            key: getattr(self, key)
-            for key in self.__parameters.keys()
-        }
-
-    def __repr__(self):
-        s = f"{self.__class__.__name__}("
-        s += ", ".join(
-            f"{key}={repr(value)}"
-            for key, value in self.parameters.items()
-        )
-        if self.nodes:
-            if self.parameters:
-                s += ", "
-            s += "nodes=["
-            s += ", ".join(repr(n) for n in self.nodes)
-            s += "]"
-        s += ")"
-        return s
-
-    __str__ = __repr__
+class Base(ParameterizedSpaceNode):
 
     # ----- ray-marching -----
 
     def distance(self, pos: Vec3):
         return self.distance_object(pos)[0]
 
-    def distance_object(self, pos: Vec3):
+    def distance_object(self, pos: Vec3, ignore_objects=None):
         raise NotImplementedError
 
-    def raymarch(self, origin: Vec3, direction: Vec3, max_iter=1000):
+    def normal(self, pos: Vec3, e: float = 0.001):
+        return Vec3(
+            self.distance(pos + (e, 0, 0)) - self.distance(pos - (e, 0, 0)),
+            self.distance(pos + (0, e, 0)) - self.distance(pos - (0, e, 0)),
+            self.distance(pos + (0, 0, e)) - self.distance(pos - (0, 0, e)),
+        ).normalize_safe()
+
+    def raymarch(
+            self,
+            origin: Vec3,
+            direction: Vec3,
+            max_iter: int = 1000,
+            ignore_objects = None,
+    ):
         pos = origin.copy()
         for it in range(max_iter):
 
-            d, o = self.distance_object(pos)
+            d, o = self.distance_object(pos, ignore_objects=ignore_objects)
 
             if d <= 0.0001:
                 return pos, o

@@ -1,4 +1,5 @@
-from typing import Union, TextIO
+from typing import Union, TextIO, Callable
+from .vec import Vec3
 
 
 class Image:
@@ -13,7 +14,7 @@ class Image:
         self.height = height
         self.data = [
             [
-                [0, 0, 0]
+                Vec3()
                 for x in range(self.width)
             ]
             for y in range(self.height)
@@ -36,6 +37,23 @@ class Image:
                 ]
                 print(*row, file=file_or_name)
 
+    def write_pixmap(self, file_or_name: Union[TextIO, str]):
+        """
+        Write a colored Pixmap
+        """
+        if isinstance(file_or_name, str):
+            with open(file_or_name, "w") as file:
+                self.write_pixmap(file)
+        else:
+            print("P3", file=file_or_name)
+            print(self.width, self.height, file=file_or_name)
+            print(255, file=file_or_name)
+            for row in self.data:
+                for c in row:
+                    c = [max(0, min(255, int(v * 255))) for v in c]
+                    print(*c, end=" ", file=file_or_name)
+                print(file=file_or_name)
+
     def dump(self, file: TextIO = None):
         for row in self.data:
             row = [
@@ -47,3 +65,8 @@ class Image:
                 for c in row
             ]
             print("".join(row), file=file)
+
+    def map(self, func: Callable):
+        for row in self.data:
+            for i, col in enumerate(row):
+                row[i] = func(col)
