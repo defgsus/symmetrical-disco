@@ -24,6 +24,14 @@ class Union(Container):
             d = min(d, node.distance(pos))
         return d
 
+    def distance_object(self, pos: Vec3):
+        dist, obj = INFINITY, None
+        for node in self.nodes:
+            d, o = node.distance_object(pos)
+            if d < dist:
+                dist, obj = d, o
+        return dist, obj
+
 
 class Difference(Container):
 
@@ -35,6 +43,17 @@ class Difference(Container):
             d = max(d, -node.distance(pos))
         return d
 
+    def distance_object(self, pos: Vec3):
+        if not self.nodes:
+            return INFINITY, None
+        dist, obj = self.nodes[0].distance_object(pos)
+        for node in self.nodes[1:]:
+            d, o = node.distance_object(pos)
+            d = -d
+            if d > dist:
+                dist, obj = d, o
+        return dist, obj
+
 
 class Intersection(Container):
 
@@ -45,3 +64,13 @@ class Intersection(Container):
         for node in self.nodes[1:]:
             d = max(d, node.distance(pos))
         return d
+
+    def distance_object(self, pos: Vec3):
+        if not self.nodes:
+            return INFINITY, None
+        dist, obj = self.nodes[0].distance_object(pos)
+        for node in self.nodes[1:]:
+            d, o = node.distance_object(pos)
+            if d > dist:
+                dist, obj = d, o
+        return dist, obj

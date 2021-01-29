@@ -20,33 +20,33 @@ class Translate(TransformBase):
     def __init__(
             self,
             object: Base,
-            translation: Vec3,
+            translation: Vector3,
     ):
+        self.translation = Vec3(translation)
         super().__init__(
-            translation=translation,
+            translation=self.translation,
             object=object,
         )
-        self.translation = translation
 
-    def distance(self, pos: Vec3):
+    def distance_object(self, pos: Vec3):
         pos = pos - self.translation
-        return self.nodes[0].distance(pos)
+        return self.nodes[0].distance(pos), self.nodes[0]
 
 
 class Scale(TransformBase):
 
     def __init__(
             self,
-            scale: float,
+            scale: Number,
             object: Base = None,
     ):
+        self.scale = float(scale)
         super().__init__(
-            scale=scale,
+            scale=self.scale,
             object=object,
         )
-        self.scale = scale
 
-    def distance(self, pos: Vec3):
+    def distance_object(self, pos: Vec3):
         pos = pos / self.scale
-        return self.nodes[0].distance(pos) * self.scale
+        return self.nodes[0].distance(pos) * self.scale, self.nodes[0]
 

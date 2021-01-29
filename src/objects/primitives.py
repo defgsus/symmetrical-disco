@@ -1,6 +1,7 @@
 from .base import Base
 from .surface import Surface
 from ..vec import Vec3
+from ..vec.types import *
 
 
 class Primitive(Base):
@@ -22,17 +23,17 @@ class Sphere(Primitive):
 
     def __init__(
             self,
-            radius: float = 1.,
+            radius: Number = 1.,
             surface: Surface = None
     ):
+        self.radius = float(radius)
         super().__init__(
-            radius=radius,
+            radius=self.radius,
             surface=surface,
         )
-        self.radius = radius
 
-    def distance(self, pos: Vec3):
-        return pos.length() - self.radius
+    def distance_object(self, pos: Vec3):
+        return pos.length() - self.radius, self
 
 
 class Tube(Primitive):
@@ -44,32 +45,32 @@ class Tube(Primitive):
     ):
         if axis < 0 or axis > 2:
             raise ValueError("Illegal axis argument %d" % axis)
+        self.radius = float(radius)
+        self.axis = int(axis)
         super().__init__(
-            radius=radius,
-            axis=axis,
+            radius=self.radius,
+            axis=self.axis,
             surface=surface,
         )
-        self.radius = radius
-        self.axis = axis
 
-    def distance(self, pos: Vec3):
+    def distance_object(self, pos: Vec3):
         pos = pos.copy()
         pos[self.axis] = 0.
-        return pos.length() - self.radius
+        return pos.length() - self.radius, self
 
 
 class Plane(Primitive):
     def __init__(
             self,
-            normal: Vec3,
+            normal: Vector3,
             surface: Surface = None
     ):
+        self.normal = Vec3(normal)
         super().__init__(
-            normal=normal,
+            normal=self.normal,
             surface=surface,
         )
-        self.normal = normal
 
-    def distance(self, pos: Vec3):
-        return pos.dot(self.normal)
+    def distance_object(self, pos: Vec3):
+        return pos.dot(self.normal), self
 
