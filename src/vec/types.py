@@ -1,6 +1,7 @@
 from typing import Sequence, Union, Optional
 
 Number = Union[int, float]
+Vector2 = Sequence[Number]
 Vector3 = Sequence[Number]
 
 

@@ -1,11 +1,17 @@
 import math
 import random
 from unittest import TestCase
+import doctest
 
-from src.vec import Vec3
+from src.vec import Vec3, vec3
 
 
-class TestVec2(TestCase):
+class TestVec3(TestCase):
+
+    def test_0000_doctest(self):
+        result = doctest.testmod(vec3)
+        if result.failed:
+            raise AssertionError(f"{result.failed} failures in doctest")
 
     def test_0010_assignment(self):
         self.assertEqual("Vec3(0, 0, 0)", str(Vec3()))
@@ -20,7 +26,6 @@ class TestVec2(TestCase):
         self.assertTrue(Vec3() == (0, 0, 0))
         self.assertTrue(Vec3(1, 2, 3) == (1, 2, 3))
 
-        self.assertTrue(Vec3() != 0)
         self.assertTrue(Vec3() != 0)
 
     def test_0100_binary_op(self):

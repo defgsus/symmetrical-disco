@@ -127,4 +127,5 @@ def render_file(filename: str, class_name: str, vector_length: int):
 
 
 if __name__ == "__main__":
+    render_file("vec2_operators.py", "Vec2Operators", 2)
     render_file("vec3_operators.py", "Vec3Operators", 3)

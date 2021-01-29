@@ -14,19 +14,38 @@ class Vec3(Vec3Operators):
             y: Optional[Number] = None,
             z: Optional[Number] = None,
     ):
+        """
+        Creates a new Vec3.
+
+        Examples:
+
+        >>> Vec3()
+        Vec3(0.0, 0.0, 0.0)
+        >>> Vec3(3)
+        Vec3(3.0, 3.0, 3.0)
+        >>> Vec3(1, 2, 3)
+        Vec3(1.0, 2.0, 3.0)
+        >>> Vec3([1, 2, 3])
+        Vec3(1.0, 2.0, 3.0)
+
+        :param x: Can be a ``number`` or a ``sequence of numbers``.
+        :param y: A ``number``
+        :param z: A ``number``
+        """
         if x is None:
             self._v = [0., 0., 0.]
         else:
             if y is None:
                 if isinstance(x, (int, float)):
+                    x = float(x)
                     self._v = [x, x, x]
                 else:
-                    self._v = [x[0], x[1], x[2]]
+                    self._v = [float(x[0]), float(x[1]), float(x[2])]
             else:
-                self._v = [x, y, z or 0.]
+                self._v = [float(x), float(y), float(z or 0.)]
 
     def __repr__(self):
-        return "%s(%s, %s, %g)" % (self.__class__.__name__, self.x, self.y, self.z)
+        return "%s(%s, %s, %s)" % (self.__class__.__name__, self.x, self.y, self.z)
 
     def __str__(self):
         return "%s(%g, %g, %g)" % (self.__class__.__name__, self.x, self.y, self.z)
@@ -218,6 +237,7 @@ class Vec3(Vec3Operators):
             self._v[0] = round(self._v[0], n)
             self._v[1] = round(self._v[1], n)
             self._v[2] = round(self._v[2], n)
+        return self
 
     def normalize(self):
         """
@@ -225,8 +245,8 @@ class Vec3(Vec3Operators):
 
         :return: self
 
-        >>> Vec3(1,1,0).normalize()
-        Vec3(0.707107, 0.707107, 0)
+        >>> Vec3(1,1,0).normalize().round(6)
+        Vec3(0.707107, 0.707107, 0.0)
         >>> Vec3(1,2,3).normalize().length() == 1
         True
         """
@@ -243,10 +263,10 @@ class Vec3(Vec3Operators):
 
         :return: self
 
-        >>> Vec3(1,1,0).normalize_safe()
-        Vec3(0.707107, 0.707107, 0)
+        >>> Vec3(1,1,0).normalize_safe().round(6)
+        Vec3(0.707107, 0.707107, 0.0)
         >>> Vec3(0).normalize_safe()
-        Vec3(0, 0, 0)
+        Vec3(0.0, 0.0, 0.0)
         """
         l = self.length()
         if not l == 0.:
@@ -264,11 +284,11 @@ class Vec3(Vec3Operators):
         :return: self
 
         >>> Vec3(1,0,0).cross((0,1,0))
-        Vec3(0, 0, 1)
+        Vec3(0.0, 0.0, 1.0)
         >>> Vec3(1,0,0).cross((0,0,1))
-        Vec3(0, -1, 0)
+        Vec3(0.0, -1.0, 0.0)
         >>> Vec3(0,1,0).cross((0,0,1))
-        Vec3(1, 0, 0)
+        Vec3(1.0, 0.0, 0.0)
         """
         self._v = [
             self.y * vec3[2] - self.z * vec3[1],
@@ -388,6 +408,7 @@ class Vec3(Vec3Operators):
         >>> Vec3(1.2, 1.5, 1.7).rounded()
         Vec3(1, 2, 2)
         """
+        return self.copy().round(n)
 
     def crossed(self, vec3: Vector3):
         """
@@ -398,11 +419,11 @@ class Vec3(Vec3Operators):
         :return: Vec3
         
         >>> Vec3(1,0,0).crossed((0,1,0))
-        Vec3(0, 0, 1)
+        Vec3(0.0, 0.0, 1.0)
         >>> Vec3(1,0,0).crossed((0,0,1))
-        Vec3(0, -1, 0)
+        Vec3(0.0, -1.0, 0.0)
         >>> Vec3(0,1,0).crossed((0,0,1))
-        Vec3(1, 0, 0)
+        Vec3(1.0, 0.0, 0.0)
         """
         return self.copy().cross(vec3)
 
