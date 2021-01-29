@@ -261,6 +261,38 @@ class Vec2(Vec2Operators):
             self._v[1] /= l
         return self
 
+    def reflect(self, norm):
+        """
+        Reflects this vector on a line with given normal, INPLACE
+
+        :param norm: float sequence of length 2
+        :return: self
+
+        Example: suppose ray coming from top-left, going down on a planar surface
+        >>> Vec2(2, -1).reflect((0, 1)).round(1)
+        Vec2(2.0, 1.0)
+        """
+        self.set(self - Vec2(norm) * self.dot(norm) * 2.)
+        return self
+
+    def rotate_z(self, degree):
+        """
+        Rotates this vector around the z-axis, INPLACE
+
+        :param degree: the degrees [0., 360.]
+        :return: self
+
+        >>> Vec2((1, 2)).rotate_z(90).round(1)
+        Vec2(-2.0, 1.0)
+        """
+        degree *= const.DEG_TO_TWO_PI
+        sa = math.sin(degree)
+        ca = math.cos(degree)
+        x = self.x * ca - self.y * sa
+        self.y = self.x * sa + self.y * ca
+        self.x = x
+        return self
+
     # --- value-copying methods ---
 
     def rounded(self, n: Optional[int] = None):
@@ -274,3 +306,28 @@ class Vec2(Vec2Operators):
         Vec2(1, 2)
         """
         return self.copy().round(n)
+
+    def reflected(self, norm):
+        """
+        Returns the this vector reflected on a line with given normal
+
+        :param norm: float sequence of length 2
+        :return: new Vec2
+
+        Example: suppose ray coming from top-left, going down on a flat plane
+        >>> Vec2(2,-1).reflected((0,1)).rounded(1)
+        Vec2(2.0, 1.0)
+        """
+        return self.copy().reflect(norm)
+
+    def rotated_z(self, degree):
+        """
+        Returns this vector rotated around the z-axis
+
+        :param degree: the degrees [0., 360.]
+        :return: new Vec2
+
+        >>> Vec2(1, 2).rotated_z(90).rounded(1)
+        Vec2(-2.0, 1.0)
+        """
+        return self.copy().rotate_z(degree)
