@@ -2,7 +2,7 @@
 
 A ray-tracer written entirely in python with entirely no other dependencies.
 
-![some demo image](imgs/image.ppm)
+![some demo image](imgs/image.png)
 
 
 Actually, it's deploying *sphere-tracing*, or *ray-marching* as it's
