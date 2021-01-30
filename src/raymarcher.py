@@ -137,12 +137,16 @@ class Statistics:
         seconds = self.end_time - self.start_time
         per_sec = 0. if not seconds else 1. / seconds
 
-        print(f"render time           : {seconds:0.2f} sec")
-        print(f"number of rays        : {self.num_rays}"
-              f", {self.num_rays / num_pix:0.2f}/pixel"
-              f", {self.num_rays * per_sec:0.2f}/sec")
-        print(f"number of reflections : {self.num_reflections}"
-              f", {self.num_reflections / num_pix:0.3f}/pixel")
+        print(
+            f"render time           : {seconds:0.2f} sec\n"
+            f"number (sub-)pixels   : {self.num_pixel_casts}"
+            f", {self.num_pixel_casts * per_sec:0.2f}/sec\n"
+            f"number of rays        : {self.num_rays}"
+            f", {self.num_rays / num_pix:0.2f}/pixel"
+            f", {self.num_rays * per_sec:0.2f}/sec\n"
+            f"number of reflections : {self.num_reflections}"
+            f", {self.num_reflections / num_pix:0.3f}/pixel\n"
+        )
 
     def _dump_verbose(self, ti: float):
         self.last_progress_time = self.progress_time
